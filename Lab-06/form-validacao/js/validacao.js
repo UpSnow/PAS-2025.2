@@ -1,11 +1,11 @@
 export function valida(input) {
     const tipoDeInput = input.dataset.tipo
 
-    if(validadores[tipoDeInput]) {
+    if (validadores[tipoDeInput]) {
         validadores[tipoDeInput](input)
     }
 
-    if(input.validity.valid) {
+    if (input.validity.valid) {
         input.parentElement.classList.remove('input-container--invalido')
         input.parentElement.querySelector('.input-mensagem-erro').innerHTML = ''
     } else {
@@ -18,6 +18,9 @@ const tiposDeErro = [
     'valueMissing',
     'typeMismatch',
     'patternMismatch',
+    'rangeUnderflow', 
+    'rangeOverflow',  
+    'stepMismatch',   
     'customError'
 ]
 
@@ -39,7 +42,15 @@ const mensagensDeErro = {
     },
     cpf: {
         valueMissing: 'O campo de CPF não pode estar vazio.',
-        customError: 'O CPF digitado não é válido.' 
+        customError: 'O CPF digitado não é válido.'
+    },
+    telefone: {
+        valueMissing: 'O campo de telefone não pode estar vazio.',
+        customError: 'O telefone informado é inválido. Verifique se o DDD é válido e se o número possui 11 dígitos (DDD + celular com 9).'
+    },
+    instagram: {
+        valueMissing: 'O campo de instagram não pode estar vazio.',
+        patternMismatch: 'Digite no formato @usuario.'
     },
     cep: {
         valueMissing: 'O campo de CEP não pode estar vazio.',
@@ -54,23 +65,35 @@ const mensagensDeErro = {
     },
     estado: {
         valueMissing: 'O campo de estado não pode estar vazio.'
+    },
+
+    preco: {
+        valueMissing: 'O campo de preço não pode estar vazio.',
+        customError: 'Preço inválido.'
+    },
+    estoque: {
+        valueMissing: 'O campo de quantidade em estoque não pode estar vazio.',
+        rangeUnderflow:'O valor mínimo é 1.',
+        stepMismatch: 'Digite apenas números inteiros.'
     }
 }
 
 const validadores = {
-    dataNascimento:input => validaDataNascimento(input),
-    cpf:input => validaCPF(input),
-    cep:input => recuperarCEP(input)
+    dataNascimento: input => validaDataNascimento(input),
+    cpf: input => validaCPF(input),
+    cep: input => recuperarCEP(input),
+    telefone: input => validaTelefone(input),
+    preco : input => validaPreco(input)
 }
 
 function mostraMensagemDeErro(tipoDeInput, input) {
     let mensagem = ''
     tiposDeErro.forEach(erro => {
-        if(input.validity[erro]) {
+        if (input.validity[erro]) {
             mensagem = mensagensDeErro[tipoDeInput][erro]
         }
     })
-    
+
     return mensagem
 }
 
@@ -78,7 +101,7 @@ function validaDataNascimento(input) {
     const dataRecebida = new Date(input.value)
     let mensagem = ''
 
-    if(!maiorQue18(dataRecebida)) {
+    if (!maiorQue18(dataRecebida)) {
         mensagem = 'Você deve ser maior que 18 anos para se cadastrar.'
     }
 
@@ -96,7 +119,7 @@ function validaCPF(input) {
     const cpfFormatado = input.value.replace(/\D/g, '')
     let mensagem = ''
 
-    if(!checaCPFRepetido(cpfFormatado) || !checaEstruturaCPF(cpfFormatado)) {
+    if (!checaCPFRepetido(cpfFormatado) || !checaEstruturaCPF(cpfFormatado)) {
         mensagem = 'O CPF digitado não é válido.'
     }
 
@@ -119,7 +142,7 @@ function checaCPFRepetido(cpf) {
     let cpfValido = true
 
     valoresRepetidos.forEach(valor => {
-        if(valor == cpf) {
+        if (valor == cpf) {
             cpfValido = false
         }
     })
@@ -134,7 +157,7 @@ function checaEstruturaCPF(cpf) {
 }
 
 function checaDigitoVerificador(cpf, multiplicador) {
-    if(multiplicador >= 12) {
+    if (multiplicador >= 12) {
         return true
     }
 
@@ -142,12 +165,12 @@ function checaDigitoVerificador(cpf, multiplicador) {
     let soma = 0
     const cpfSemDigitos = cpf.substr(0, multiplicador - 1).split('')
     const digitoVerificador = cpf.charAt(multiplicador - 1)
-    for(let contador = 0; multiplicadorInicial > 1 ; multiplicadorInicial--) {
+    for (let contador = 0; multiplicadorInicial > 1; multiplicadorInicial--) {
         soma = soma + cpfSemDigitos[contador] * multiplicadorInicial
         contador++
     }
 
-    if(digitoVerificador == confirmaDigito(soma)) {
+    if (digitoVerificador == confirmaDigito(soma)) {
         return checaDigitoVerificador(cpf, multiplicador + 1)
     }
 
@@ -169,12 +192,12 @@ function recuperarCEP(input) {
         }
     }
 
-    if(!input.validity.patternMismatch && !input.validity.valueMissing) {
-        fetch(url,options).then(
+    if (!input.validity.patternMismatch && !input.validity.valueMissing) {
+        fetch(url, options).then(
             response => response.json()
         ).then(
             data => {
-                if(data.erro) {
+                if (data.erro) {
                     input.setCustomValidity('Não foi possível buscar o CEP.')
                     return
                 }
@@ -195,3 +218,77 @@ function preencheCamposComCEP(data) {
     cidade.value = data.localidade
     estado.value = data.uf
 }
+
+
+function validaDDD(ddd) {
+    const dddsValidos = [
+        '11', '12', '13', '14', '15', '16', '17', '18', '19',
+        '21', '22', '24', '27', '28',
+        '31', '32', '33', '34', '35', '37', '38',
+        '41', '42', '43', '44', '45', '46',
+        '47', '48', '49',
+        '51', '53', '54', '55',
+        '61', '62', '64', '63', '65', '66', '67',
+        '68', '69',
+        '71', '73', '74', '75', '77', '79',
+        '81', '82', '83', '84', '85', '86', '87', '88', '89',
+        '91', '92', '93', '94', '95', '96', '97', '98', '99'
+    ]
+
+    return dddsValidos.includes(ddd)
+
+}
+
+
+function validaTelefone(input) {
+    const telefone = input.value.replace(/\D/g, '')
+    var mensagem = ''
+    if (input.value === '') return
+
+    if (telefone.length !== 11) {
+        mensagem = 'O telefone deve ter DDD + número (11 dígitos).'
+    }
+    else {
+        const ddd = telefone.substring(0, 2)
+
+        if (!validaDDD(ddd)) {
+            mensagem = 'DDD inválido.'
+        }
+        else if (telefone.charAt(2) !== '9') {
+            mensagem = 'Número de celular inválido.'
+        }
+
+    }
+
+    input.setCustomValidity(mensagem)
+}
+function validaPreco(input) {
+    let valor = input.value
+    let mensagem = ''
+
+    
+    if (valor === '') {
+        input.setCustomValidity('')
+        return
+    }
+
+   
+    valor = valor.replace(/\s|R\$/g, '')
+    valor = valor.replace(/\./g, '')
+    valor = valor.replace(',', '.')
+
+    const numero = Number(valor)
+
+    
+    if (isNaN(numero)) {
+        mensagem = 'Preço inválido.'
+    }
+
+    
+    else if (numero <= 0) {
+        mensagem = 'O preço mínimo é R$ 1,00.'
+    }
+
+    input.setCustomValidity(mensagem)
+}
+

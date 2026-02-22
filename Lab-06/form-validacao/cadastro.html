@@ -41,7 +41,7 @@
                     </div>
                     
                     <div class="input-container">
-                        <input name="senha" id="senha" class="input" type="password" placeholder="Senha" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?!.*[ !@#$%^&*_=+-]).{6,12}$" title="A senha deve conter entre 6 a 12 caracteres, deve conter pelo menos uma letra maiúscula, um número e não deve conter símbolos." data-tipo="senha" required>
+                        <input name="senha" id="senha" class="input" type="password" placeholder="Senha" pattern="^(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9]{6,12}$" title="A senha deve conter entre 6 a 12 caracteres, deve conter pelo menos uma letra maiúscula, um número e não deve conter símbolos." data-tipo="senha" required>
                         <label class="input-label" for="senha">Senha</label>
                         <span class="input-mensagem-erro">Este campo não está válido</span>
                     </div>
@@ -54,10 +54,22 @@
                         <span class="input-mensagem-erro">Este campo não está válido</span>
                     </div>
                     <div class="input-container">
-                        <input name="cpf" id="cpf" class="input" type="text" placeholder="CPF" data-tipo="cpf" required>
+                        <input name="cpf" id="cpf" class="input" type="text" placeholder="CPF" oninput="this.value = this.value.replace(/[^0-9()\- ]/g, '')" data-tipo="cpf" required>
                         <label class="input-label" for="cpf">CPF</label>
                         <span class="input-mensagem-erro">Este campo não está válido</span>
                     </div>
+                   <!-- ------------------------------------------------------------------------------------------------------------- -->
+                    <div class="input-container">
+                        <input name="telefone" id="telefone" class="input" type="tel" placeholder="telefone" maxlength="15"  oninput="this.value = this.value.replace(/[^0-9()\- ]/g, '')" data-tipo="telefone" required>
+                        <label class="input-label" for="telefone">Telefone</label>
+                        <span class="input-mensagem-erro">Este campo não está válido</span>
+                    </div>
+                     <div class="input-container">
+                        <input name="instagram" id="instagram" class="input" type="text" placeholder="instagram" pattern="^@[a-zA-Z0-9._]+$" data-tipo="instagram" required>
+                        <label class="input-label" for="instagram">Instagram</label>
+                        <span class="input-mensagem-erro">Este campo não está válido</span>
+                    </div>
+                    
                 </fieldset>
                 <fieldset>
                     <legend class="formulario__legenda">Endereço</legend>
