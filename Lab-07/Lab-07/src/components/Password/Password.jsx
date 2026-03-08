@@ -9,13 +9,15 @@ const Password = ({ nome, type = 'password', value, onChange ,required }) => {
         <div className="Password">
             <label
                 className="label-Password"
-                for="Password">{nome}</label>
+                htmlFor="Password">{nome}</label>
             <input
                 className="input-Password"
                 id="Password" type={type}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                required={required}></input>
+                required={required}>
+
+                </input>
 
         </div>
 

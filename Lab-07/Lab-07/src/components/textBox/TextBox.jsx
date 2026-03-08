@@ -1,7 +1,7 @@
 import React from "react";
 import './TextBox.css'
 
-const TextBox = ({ placeholder, nome, value, onChange, required }) => {
+const TextBox = ({ placeholder, nome, value, onChange,id, required }) => {
 
 
 
@@ -10,11 +10,11 @@ const TextBox = ({ placeholder, nome, value, onChange, required }) => {
         <div className="div-TextBox">
             <label
                 className="label-TextBox"
-                for="TexBox "
+                htmlFor={id}
             >{nome}
             </label>
             <input className="input-TextBox"
-                id='TexBox'
+                id={id}
                 placeholder={placeholder ? placeholder : 'Caixa de Texto'}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}

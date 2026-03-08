@@ -6,6 +6,8 @@ import TextBox from '../textBox/TextBox'
 import Password from '../Password/Password'
 import Button from '../Button/Button.jsx'
 
+import lab from "../../assets/lab.png"
+
 
 
 const Form = () => {
@@ -41,9 +43,11 @@ const Form = () => {
     return (
 
         <form onSubmit={Enviar} className="Form">
+            <img src={lab} className="form-img"></img>
             <h1>Formulario com React</h1>
             <TextBox
                 nome={'Nome'}
+                id={'Nome'}
                 value={nome}
                 onChange={setNome}
                 required
@@ -51,12 +55,14 @@ const Form = () => {
             ></TextBox>
             <TextBox
                 nome={'Sobrenome'}
+                id={'Sobrenome'}
                 value={sobrenome}
                 onChange={setSobrenome}
                 required
             ></TextBox>
             <TextBox
                 nome={'E-mail'}
+                id={'E-mail'}
                 value={email}
                 onChange={setEmail}
                 required
