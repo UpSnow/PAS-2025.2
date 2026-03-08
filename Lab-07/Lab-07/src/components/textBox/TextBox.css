@@ -1,0 +1,15 @@
+.div-TextBox{
+    display: flex;
+    flex-direction: column;
+
+}
+
+.input-TextBox{
+    border-radius: 7px;
+    
+}
+
+
+.label-TextBox {
+    padding: 4px 4px;
+}
