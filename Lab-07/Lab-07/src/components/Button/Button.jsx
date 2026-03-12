@@ -17,4 +17,4 @@ const Button = ({text, onClick , variant = 'send', type='button', className= '' 
     )
 }
 
-export default Button
+export default Button 
