@@ -6,6 +6,7 @@ export const TaskContext = createContext();
 
 export function TaskProvider({ children }) {
     const [ tasks, setTasks ] = useState([])
+    const [filter,setFilter] = useState("all")
 
     function addTask(text) {
         const newTask = {
@@ -13,19 +14,35 @@ export function TaskProvider({ children }) {
             text,
             completed: false
         }
-        setTasks(pre => [...pre, newTask])
+        setTasks(prev => [...prev, newTask])
+    }
+
+    function removeTask(id){
+        setTasks(prev => prev.filter(task => task.id !== id) )
+
     }
 
 
     function toggleTask(id) {
-        setTasks(pre =>
-            pre.map(task =>
+        setTasks(prev =>
+            prev.map(task =>
                 task.id === id ? { ...task, completed: !task.completed } : task
             )
         )
     }
 
-    const value = useMemo(() => ({ tasks, addTask, toggleTask }), [tasks])
+    function filteredTasks(){
+        if(filter === "completed"){
+            return tasks.filter(t => t.completed)
+        }
+        else if (filter === "pending"){
+            return tasks.filter(t => !t.completed)
+        }
+        return tasks
+        
+    }
+
+    const value = useMemo(() => ({ tasks, addTask, removeTask ,toggleTask, filter, setFilter, filteredTasks }), [tasks, filter])
 
     return(
         <TaskContext.Provider value={value}>{children}</TaskContext.Provider>

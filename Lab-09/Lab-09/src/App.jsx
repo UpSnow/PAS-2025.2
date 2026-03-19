@@ -7,6 +7,7 @@ import './App.css'
 import Header from './components/Header/Header'
 import AddTask from './components/AddTask/AddTask'
 import TaskList from './components/TaskList/TaskList'
+import Filteres from './components/Filteres/Filteres'
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
     <Header/>
     <AddTask/>
     <TaskList/>
+    <Filteres/>
    </div>
   )
 }
